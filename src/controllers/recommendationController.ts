@@ -79,3 +79,46 @@ export async function downvote(req: Request, res: Response){
         res.sendStatus(500)
     }
 }
+
+export async function random(req: Request, res: Response){
+    try {
+        const random = Math.random()
+        let result;
+
+        if(random >= 0.7){
+            result = await connection.query(`
+            SELECT * from songs
+            WHERE score >= $1 AND score <= $2
+            ORDER BY random()
+            `, [-5, 10])
+        } else {
+            result = await connection.query(`
+            SELECT * from songs
+            WHERE score > $1
+            ORDER BY random()
+            `, [10])
+        }
+        
+        if(result.rows.length === 0){
+            result = await connection.query(`
+            SELECT * from songs
+            ORDER BY random()
+            `)
+        }
+
+        if(result.rows.length === 0) return res.sendStatus(404)
+
+        console.log(result.rows)
+
+        const recommendation = result.rows[0]
+
+        res.send(recommendation).status(200)
+    } catch (e) {
+        console.log(e)
+        res.sendStatus(500)
+    }
+}
+
+export async function getByAmount(){
+
+}

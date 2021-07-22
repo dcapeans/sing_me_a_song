@@ -39,3 +39,23 @@ describe("POST /recommendations/:id/downvote", () => {
     expect(response.status).toBe(200);
   });
 });
+
+describe("GET /recommendations/random", () => {
+  it("should answer recommendation and status 200 for success", async () => {
+    createRecommendation()
+    const response = await supertest(app).get("/recommendations/random");
+    expect(response.status).toBe(200);
+    // expect(response.body).toEqual(
+    //   expect.objectContaining({
+    //     id: expect.any(Number),
+    //     name: expect.any(String),
+    //     youtubeLink: expect.any(String),
+    //     score: expect.any(Number),
+    //   })
+    // )
+  });
+  it("should answer status 404 for no songs found", async () => {
+    const response = await supertest(app).get("/recommendations/random");
+    expect(response.status).toBe(404);
+  });
+});

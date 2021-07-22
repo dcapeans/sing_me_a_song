@@ -11,9 +11,10 @@ export async function endConnection(){
 export async function createRecommendation(){
     const name = "test"
     const youtubeLink = "https://www.youtube.com/watch?v=testing"
+    const score = 8
 
     await connection.query(`
-    INSERT INTO songs (name, youtube_link)
-    VALUES ($1, $2)
-    `, [name, youtubeLink])
+    INSERT INTO songs (name, youtube_link, score)
+    VALUES ($1, $2, $3)
+    `, [name, youtubeLink, score])
 }

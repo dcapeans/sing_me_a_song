@@ -1,7 +1,5 @@
 import express from "express";
 import cors from "cors";
-import { Request, Response } from 'express'
-import connection from './database'
 
 import * as RecommendationController from './controllers/recommendationController'
 
@@ -15,8 +13,8 @@ app.post("/recommendations/:id/upvote", RecommendationController.upvote)
 
 app.post("/recommendations/:id/downvote", RecommendationController.downvote)
 
-app.get("/recommendations/random", )
+app.get("/recommendations/random", RecommendationController.random)
 
-app.get("/recommendations/top/:amount", )
+app.get("/recommendations/top/:amount", RecommendationController.getByAmount)
 
 export default app;
