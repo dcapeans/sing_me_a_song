@@ -31,3 +31,11 @@ describe("POST /recommendations/:id/upvote", () => {
     expect(response.status).toBe(200);
   });
 });
+
+describe("POST /recommendations/:id/downvote", () => {
+  it("should answer status 200 for success", async () => {
+    createRecommendation()
+    const response = await supertest(app).post("/recommendations/1/downvote");
+    expect(response.status).toBe(200);
+  });
+});

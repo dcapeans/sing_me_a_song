@@ -45,3 +45,37 @@ export async function upvote(req: Request, res: Response){
         res.sendStatus(500)
     }
 }
+
+export async function downvote(req: Request, res: Response){
+    try {
+        const id = +req.params.id
+
+        const result = await connection.query(`
+            SELECT * from songs
+            WHERE id = $1
+        `, [id])
+
+        const recommendation = result.rows[0]
+        const newScore = recommendation.score - 1
+
+        if(newScore < -5){
+            await connection.query(`
+            DELETE from songs
+            WHERE id=$1
+            `, [id])
+
+            return res.sendStatus(200)
+        }
+
+        await connection.query(`
+            UPDATE songs
+            SET score=$1
+            WHERE id=$2
+        `, [newScore, id])
+
+        res.sendStatus(200)
+    } catch(e) {
+        console.log(e)
+        res.sendStatus(500)
+    }
+}
