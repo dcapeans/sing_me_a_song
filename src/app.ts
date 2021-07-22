@@ -3,28 +3,20 @@ import cors from "cors";
 import { Request, Response } from 'express'
 import connection from './database'
 
+import * as RecommendationController from './controllers/recommendationController'
+
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.post("/recommendations", async (req: Request, res: Response) => {
-  try {
-    const { name, youtubeLink } = req.body
-    const regexp = new RegExp(/(?:youtube\.com\/\S*(?:(?:\/e(?:mbed))?\/|watch\?(?:\S*?&?v\=))|youtu\.be\/)([a-zA-Z0-9_-]{6,11})/, 'g') 
+app.post("/recommendations", RecommendationController.create);
 
-    if(!name || !youtubeLink) return res.sendStatus(400)
-    if(!youtubeLink.match(regexp)) return res.sendStatus(400)
+app.post("/recommendations/:id/upvote", RecommendationController.upvote)
 
-    await connection.query(`
-      INSERT INTO songs (name, youtube_link)
-      VALUES ($1, $2)
-    `, [name, youtubeLink])
+app.post("/recommendations/:id/downvote", )
 
-    res.sendStatus(201)
-  } catch(e) {
-    console.log(e)
-    res.sendStatus(500)
-  }
-});
+app.get("/recommendations/random", )
+
+app.get("/recommendations/top/:amount", )
 
 export default app;
