@@ -26,7 +26,7 @@ describe("POST /recommendations", () => {
 
 describe("POST /recommendations/:id/upvote", () => {
   it("should answer status 200 for success", async () => {
-    createRecommendation()
+    createRecommendation('test')
     const response = await supertest(app).post("/recommendations/1/upvote");
     expect(response.status).toBe(200);
   });
@@ -34,7 +34,7 @@ describe("POST /recommendations/:id/upvote", () => {
 
 describe("POST /recommendations/:id/downvote", () => {
   it("should answer status 200 for success", async () => {
-    createRecommendation()
+    createRecommendation('test')
     const response = await supertest(app).post("/recommendations/1/downvote");
     expect(response.status).toBe(200);
   });
@@ -42,20 +42,41 @@ describe("POST /recommendations/:id/downvote", () => {
 
 describe("GET /recommendations/random", () => {
   it("should answer recommendation and status 200 for success", async () => {
-    createRecommendation()
+    createRecommendation('test')
     const response = await supertest(app).get("/recommendations/random");
     expect(response.status).toBe(200);
-    // expect(response.body).toEqual(
-    //   expect.objectContaining({
-    //     id: expect.any(Number),
-    //     name: expect.any(String),
-    //     youtubeLink: expect.any(String),
-    //     score: expect.any(Number),
-    //   })
-    // )
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        id: expect.any(Number),
+        name: expect.any(String),
+        youtube_link: expect.any(String),
+        score: expect.any(Number),
+      })
+    )
   });
   it("should answer status 404 for no songs found", async () => {
     const response = await supertest(app).get("/recommendations/random");
     expect(response.status).toBe(404);
   });
 });
+
+describe("GET /recommendations/top/:amount", () => {
+  it("should answer status 200 for success", async () => {
+    createRecommendation('test1')
+    createRecommendation('test2')
+    createRecommendation('test3')
+    const response = await supertest(app).get("/recommendations/top/3");
+    expect(response.status).toBe(200)
+    expect(response.body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: expect.any(Number),
+          name: expect.any(String),
+          youtube_link: expect.any(String),
+          score: expect.any(Number),
+        })
+      ])
+    )
+  });
+});
+

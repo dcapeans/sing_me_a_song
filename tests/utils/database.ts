@@ -8,8 +8,7 @@ export async function endConnection(){
     await connection.end()
 }
 
-export async function createRecommendation(){
-    const name = "test"
+export async function createRecommendation(name: string){
     const youtubeLink = "https://www.youtube.com/watch?v=testing"
     const score = 8
 

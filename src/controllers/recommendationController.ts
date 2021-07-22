@@ -54,7 +54,7 @@ export async function downvote(req: Request, res: Response){
             SELECT * from songs
             WHERE id = $1
         `, [id])
-
+        console.log(result.rows)
         const recommendation = result.rows[0]
         const newScore = recommendation.score - 1
 
@@ -108,10 +108,7 @@ export async function random(req: Request, res: Response){
 
         if(result.rows.length === 0) return res.sendStatus(404)
 
-        console.log(result.rows)
-
         const recommendation = result.rows[0]
-
         res.send(recommendation).status(200)
     } catch (e) {
         console.log(e)
@@ -119,6 +116,21 @@ export async function random(req: Request, res: Response){
     }
 }
 
-export async function getByAmount(){
+export async function getTopByAmount(req: Request, res: Response){
+    try {
+        const amount = +req.params.amount
 
+        const result = await connection.query(`
+        SELECT * from songs
+        ORDER BY score DESC
+        LIMIT $1
+        `, [amount])
+
+        const topList = result.rows
+
+        res.send(topList).status(200)
+    } catch (e) {
+        console.log(e)
+        res.sendStatus(500)
+    }
 }
