@@ -5,7 +5,8 @@ import * as RecommendationService from '../services/recommendationsService'
 
 export async function create(req: Request, res: Response){
     try {
-        const { name, youtubeLink } = req.body
+        const name: string = req.body.name
+        const youtubeLink: string = req.body.youtubeLink
         const isValid = await RecommendationService.validateNameLink(name, youtubeLink)
         if(!isValid) return res.sendStatus(400)
         await RecommendationRepository.insert(name, youtubeLink)

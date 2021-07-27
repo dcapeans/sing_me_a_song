@@ -1,6 +1,7 @@
 import connection from '../database'
+import { Song } from "../interfaces"
 
-export async function findById(id: Number){
+export async function findById(id: Number): Promise<Song>{
     const result = await connection.query(`
         SELECT * from songs
         WHERE id = $1
@@ -31,7 +32,7 @@ export async function insert(name: String, youtubeLink: String){
     `, [name, youtubeLink])
 }
 
-export async function findByScore(highScore?: Number, lowScore?: Number){
+export async function findByScore(highScore?: Number, lowScore?: Number): Promise<Song[]>{
     const select = `SELECT * from songs `
     let where;
     let variables;
@@ -45,7 +46,6 @@ export async function findByScore(highScore?: Number, lowScore?: Number){
     }else if(!highScore && !lowScore){
         where = ''
     }
-
     const orderBy = `ORDER BY random()`
 
     const result = await connection.query(select + where + orderBy, variables)
@@ -53,7 +53,7 @@ export async function findByScore(highScore?: Number, lowScore?: Number){
     return result.rows
 }
 
-export async function findTopByAmount(amount: Number){
+export async function findTopByAmount(amount: Number): Promise<Song[]>{
     const result = await connection.query(`
         SELECT * from songs
         ORDER BY score DESC
