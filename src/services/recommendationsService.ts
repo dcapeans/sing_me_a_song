@@ -1,6 +1,6 @@
 import * as RecommendationRepository from '../repositories/recommendationsRepository'
 
-export async function validateNameLink(name: String, youtubeLink: String){
+export async function validateNameLink(name: string, youtubeLink: string){
     const regexp = new RegExp(/(?:youtube\.com\/\S*(?:(?:\/e(?:mbed))?\/|watch\?(?:\S*?&?v\=))|youtu\.be\/)([a-zA-Z0-9_-]{6,11})/, 'g') 
 
     if(!name || !youtubeLink) return null
@@ -30,7 +30,7 @@ export async function checkIfExistsSongs(result: any[]){
     return true
 }
 
-export async function deleteIfScoreBelowMinimum(score: Number, id: Number){
+export async function deleteIfScoreBelowMinimum(score: number, id: number){
     if(score < -5){
         await RecommendationRepository.deleteSong(id)
         return true
